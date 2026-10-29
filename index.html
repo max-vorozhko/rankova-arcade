@@ -160,6 +160,8 @@ section{padding-block:12px 36px}
 .final .addr{display:grid;gap:12px;justify-items:start}
 .final .btn.book{box-shadow:4px 4px 0 var(--brand);border-color:var(--brand)}
 footer{padding-block:0 32px;color:var(--muted);font-size:14px;text-align:center}
+.credit{margin:6px 0 0;font-size:12px;letter-spacing:.04em}
+.credit a{color:var(--fg);font-weight:800;text-decoration:none;border-bottom:2px solid var(--brand)}
 
 /* play overlay */
 .play{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;overflow-y:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -342,7 +344,7 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
     </div>
   </div>
 </main>
-<footer class="wrap">Rankova Studio · Музика для всіх, а не тільки для обраних</footer>
+<footer class="wrap"><p style="margin:0">Rankova Studio · Музика для всіх, а не тільки для обраних</p><p class="credit">Powered by <a href="https://github.com/max-vorozhko" target="_blank" rel="noopener">Max Vorozhko</a></p></footer>
 
 <div class="play" id="play" hidden role="dialog" aria-modal="true" aria-labelledby="pTitle">
   <div class="play-bar">
