@@ -94,7 +94,9 @@ kbd{font-family:var(--f-body);font-size:11px;font-weight:800;border:1.5px solid 
 .player{background:var(--surface);color:var(--fg);border:2px solid var(--on-brand);border-radius:var(--r);box-shadow:6px 6px 0 var(--on-brand);padding:22px;display:grid;gap:14px}
 .player label{font-size:13px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .nickrow{display:flex;gap:8px}
-.nickrow input{flex:1;min-width:0;height:46px;border-radius:12px;border:2px solid var(--border);background:var(--bg);color:var(--fg);padding:0 14px;font:inherit;font-weight:800}
+.player{grid-template-columns:minmax(0,1fr)}
+.player > *{min-width:0}
+.nickrow input{flex:1;min-width:0;width:100%;height:46px;border-radius:12px;border:2px solid var(--border);background:var(--bg);color:var(--fg);padding:0 14px;font:inherit;font-weight:800}
 .lvl{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .lvl strong{font-family:var(--f-display);font-size:22px}
 .lvl span{font-variant-numeric:tabular-nums;font-weight:800}
