@@ -1,0 +1,51 @@
+rules_version = '2';
+
+// Rankova Arcade: правила для рейтингу.
+// Скопіюйте весь файл у Firebase Console → Firestore Database → Rules → Publish.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Один документ на гравця: players/{uid}, де uid видає анонімний вхід Firebase.
+    match /players/{uid} {
+      // Рейтинг бачать усі.
+      allow read: if true;
+
+      // Писати можна лише свій документ, лише коректні дані,
+      // і рекорди можуть тільки зростати.
+      allow create, update: if request.auth != null
+                            && request.auth.uid == uid
+                            && validPlayer();
+
+      allow delete: if false;
+
+      function score(f, max) {
+        return request.resource.data[f] is int
+            && request.resource.data[f] >= 0
+            && request.resource.data[f] <= max;
+      }
+
+      function notLower(f) {
+        return resource == null || request.resource.data[f] >= resource.data[f];
+      }
+
+      function validPlayer() {
+        let d = request.resource.data;
+        let keys = ['nick', 'total', 'updatedAt',
+                    'b_vocal', 'b_piano', 'b_drums', 'b_guitar', 'b_cajon', 'b_sopilka', 'b_ethno'];
+        return d.keys().hasOnly(keys) && d.keys().hasAll(keys)
+            && d.nick is string && d.nick.size() > 0 && d.nick.size() <= 20
+            && d.updatedAt == request.time
+            // максимум балів у кожній грі
+            && score('b_vocal', 1000)  && score('b_piano', 3000)
+            && score('b_drums', 1300)  && score('b_guitar', 1000)
+            && score('b_cajon', 3000)  && score('b_sopilka', 3000)
+            && score('b_ethno', 1000)
+            && d.total == d.b_vocal + d.b_piano + d.b_drums + d.b_guitar
+                        + d.b_cajon + d.b_sopilka + d.b_ethno
+            && notLower('b_vocal') && notLower('b_piano') && notLower('b_drums')
+            && notLower('b_guitar') && notLower('b_cajon') && notLower('b_sopilka')
+            && notLower('b_ethno');
+      }
+    }
+  }
+}
