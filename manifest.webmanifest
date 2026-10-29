@@ -1,0 +1,14 @@
+{
+  "name": "Rankova Arcade",
+  "short_name": "Rankova",
+  "description": "Музичні міні-ігри від Rankova Studio",
+  "start_url": "./?utm_source=homescreen",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFDF18",
+  "theme_color": "#FFDF18",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
