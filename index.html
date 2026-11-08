@@ -264,6 +264,12 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
 @media (max-width:520px){.opts.text{--cols:1}.opt{min-height:54px;padding:10px 12px}.q{font-size:20px}.play-bar h2{font-size:15px}.play-bar .wrap{gap:8px}.chip{padding:2px 8px;font-size:12px}.stage{padding-block:18px 32px;gap:14px}.intro{padding:20px}}
 @media (max-width:860px){.hero{grid-template-columns:1fr}.board{grid-template-columns:1fr}.final{grid-template-columns:1fr;padding:26px}}
 @media (max-width:520px){.nav a.lnk{display:none}.piano{height:190px}.piano .pad b{font-size:14px}.score-big{font-size:64px}.sop{padding-left:96px;height:80px}.sop::before{width:44px;left:16px;top:18px}.sop::after{left:70px;top:30px}.hole i{width:26px;height:26px}.drum-wrap canvas{height:300px}}
+.sheet{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;background:rgba(35,31,32,.55);padding:16px;padding-bottom:max(16px,env(safe-area-inset-bottom,0px))}
+.sheet .panel{width:100%;max-width:440px;position:relative}
+.sheet h3{font-size:20px;margin:0 40px 10px 0}
+.sheet ol{margin:0 0 14px;padding-left:22px;display:grid;gap:8px}
+.sheet .xbtn{position:absolute;top:12px;right:12px;border-color:var(--border);background:var(--fg);color:var(--bg)}
+.sheet kbd{font:inherit;font-weight:800;border:2px solid var(--border);border-radius:8px;padding:0 6px;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -287,6 +293,7 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
         <div class="ctas">
           <a class="btn ink" href="#games">Почати грати</a>
           <a class="btn" data-book="hero" href="#" target="_blank" rel="noopener">Пробний урок 30 хв</a>
+          <button class="btn" id="installBtn" type="button" hidden>Встановити на телефон</button>
         </div>
       </div>
       <aside class="player" aria-label="Твій профіль">
@@ -350,6 +357,15 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
 </main>
 <footer class="wrap"><p style="margin:0">Rankova Studio · Музика для всіх, а не тільки для обраних</p><p class="credit">Powered by <a href="https://github.com/max-vorozhko" target="_blank" rel="noopener">Max Vorozhko</a></p></footer>
 
+<div class="sheet" id="installSheet" hidden role="dialog" aria-modal="true" aria-labelledby="isTitle">
+  <div class="panel">
+    <button class="xbtn" id="isClose" type="button" aria-label="Закрити">×</button>
+    <h3 id="isTitle">Rankova Arcade на телефоні</h3>
+    <div id="isBody"></div>
+    <button class="btn ink" id="isOk" type="button">Зрозуміло</button>
+  </div>
+</div>
+
 <div class="play" id="play" hidden role="dialog" aria-modal="true" aria-labelledby="pTitle">
   <div class="play-bar">
     <div class="wrap">
@@ -367,7 +383,8 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
 "use strict";
 const $=s=>document.querySelector(s);
 const BOOK='https://n813529.alteg.io/company/764262/record-type';
-const bookUrl=c=>BOOK+'?utm_source=rankova_arcade&utm_medium=game&utm_content='+encodeURIComponent(c||'hub');
+const STANDALONE=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const bookUrl=c=>BOOK+'?utm_source=rankova_arcade&utm_medium='+(STANDALONE?'app':'game')+'&utm_content='+encodeURIComponent(c||'hub');
 const rand=n=>Math.floor(Math.random()*n);
 const pick=a=>a[rand(a.length)];
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -628,7 +645,7 @@ function showResult(ins,score){
   if(isBest&&score>0)chime();
   $('#again').addEventListener('click',()=>openGame(ins.id));
   $('#toHub').addEventListener('click',()=>{closeGame();$('#games').scrollIntoView({behavior:'smooth'})});
-  $('#share').addEventListener('click',e=>{const b=e.currentTarget,url=location.href.split('#')[0];track('share',{game:ins.id,score});
+  $('#share').addEventListener('click',e=>{const b=e.currentTarget,url=location.origin+location.pathname;track('share',{game:ins.id,score});
     if(navigator.share){navigator.share({title:'Rankova Arcade',text:shareText,url}).catch(()=>{});return}
     const done=()=>{b.textContent='Скопійовано'};
     try{navigator.clipboard.writeText(shareText+' '+url).then(done,()=>{b.textContent=shareText+' '+url})}catch(err){b.textContent=shareText+' '+url}});
@@ -873,8 +890,41 @@ function gameEthno(stg,ctx){
   show();
 }
 
+/* ---------- install (PWA) ---------- */
+const UA=navigator.userAgent;
+const IOS=/iPhone|iPad|iPod/.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1);
+const INAPP=/Instagram|FBAN|FBAV|FB_IAB|Line\/|TikTok|musical_ly/i.test(UA);
+const ANDROID=/Android/.test(UA);
+let installEvt=null;
+const installBtn=$('#installBtn'),sheet=$('#installSheet');
+function sheetOpen(html){$('#isBody').innerHTML=html;sheet.hidden=false;$('#isOk').focus()}
+function sheetClose(){sheet.hidden=true}
+['#isClose','#isOk'].forEach(s=>$(s).addEventListener('click',sheetClose));
+sheet.addEventListener('click',e=>{if(e.target===sheet)sheetClose()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!sheet.hidden)sheetClose()});
+const HOW={
+  inapp:`<p>Instagram відкрив гру у своєму вікні, звідси її не встановити.</p><ol><li>Натисни <kbd>${IOS?'⋯':'⋮'}</kbd> угорі праворуч.</li><li>Обери «Відкрити в браузері» (${IOS?'Safari':'Chrome'}).</li><li>Там натисни «Встановити на телефон» ще раз.</li></ol>`,
+  ios:`<ol><li>Натисни <kbd>Поділитися</kbd> (квадрат зі стрілкою вгору) внизу або вгорі екрана.</li><li>Прокрути і вибери «На екран „Додому“».</li><li>Натисни «Додати». Іконка Rankova з’явиться поруч з іншими застосунками.</li></ol>`,
+  android:`<ol><li>Натисни <kbd>⋮</kbd> угорі праворуч у Chrome.</li><li>Вибери «Встановити застосунок» або «Додати на головний екран».</li><li>Підтверди. Іконка Rankova з’явиться на головному екрані.</li></ol>`
+};
+function installMode(){return STANDALONE?null:installEvt?'prompt':INAPP?'inapp':IOS?'ios':ANDROID?'android':null}
+function renderInstall(){installBtn.hidden=!installMode()}
+installBtn.addEventListener('click',async()=>{
+  const m=installMode();track('pwa_install_click',{mode:m});
+  if(m==='prompt'){installEvt.prompt();const r=await installEvt.userChoice.catch(()=>null);track('pwa_install_choice',{outcome:r?r.outcome:'unknown'});installEvt=null;renderInstall();return}
+  if(m)sheetOpen(HOW[m]);
+});
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;renderInstall()});
+addEventListener('appinstalled',()=>{installEvt=null;installBtn.hidden=true;track('pwa_installed',{})});
+if(STANDALONE)track('pwa_open',{});
+if('serviceWorker' in navigator&&isSecureContext)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+
+/* ---------- deep links: #play-<гра> (ярлики на іконці застосунку) ---------- */
+function fromHash(){const m=/^#play-(\w+)$/.exec(location.hash);if(m&&INSTR.some(i=>i.id===m[1])){history.replaceState(null,'',location.pathname+location.search);openGame(m[1])}}
+addEventListener('hashchange',fromHash);
+
 /* ---------- boot ---------- */
-renderHub();renderRows();initDb();
+renderHub();renderRows();renderInstall();initDb();fromHash();
 })();
 </script>
 </body>
