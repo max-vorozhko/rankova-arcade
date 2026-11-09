@@ -1,6 +1,6 @@
 /* Rankova Arcade service worker: гра працює офлайн, рейтинг оновлюється, коли є мережа.
    Після зміни будь-якого файлу гри збільште VERSION, щоб телефони підтягнули нову версію. */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL = 'rankova-shell-' + VERSION;
 const EXT = 'rankova-ext-' + VERSION;
 const SHELL_FILES = [
