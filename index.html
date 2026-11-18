@@ -32,7 +32,7 @@
 <title>Rankova Arcade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Nunito:wght@400;600;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Jost:wght@500&family=Nunito:wght@400;600;800;900&display=swap">
 <style>
 html{-webkit-text-size-adjust:100%}body{margin:0}[hidden]{display:none!important}img{max-width:100%}
 /* Layout: yellow brand band + vyshyvanka ornament strip, sticker-style game cards, full-screen play stage */
@@ -270,6 +270,32 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
 .sheet ol{margin:0 0 14px;padding-left:22px;display:grid;gap:8px}
 .sheet .xbtn{position:absolute;top:12px;right:12px;border-color:var(--border);background:var(--fg);color:var(--bg)}
 .sheet kbd{font:inherit;font-weight:800;border:2px solid var(--border);border-radius:8px;padding:0 6px;white-space:nowrap}
+.ph-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.ph-card{font:inherit;color:inherit;text-align:left;background:var(--surface);border:2px solid var(--border);border-radius:var(--r);box-shadow:5px 5px 0 var(--shadow);padding:10px;display:grid;gap:8px;cursor:pointer;transition:transform .15s, box-shadow .15s;min-width:0}
+.ph-card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--shadow)}
+.ph-card canvas{width:100%;height:auto;display:block;border-radius:10px}
+.ph-card b{font-family:var(--f-display);font-size:16px;padding:0 4px}
+.ph-card small{display:block;color:var(--muted);font-size:13px;padding:0 4px 4px;line-height:1.35}
+.ph-cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:20px}
+.pick{position:relative}
+.pick input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
+.ph-ed{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start;padding-block:24px 40px}
+.ph-view{background:var(--soft);border-radius:var(--r);padding:16px;display:grid;place-items:center;min-width:0;position:relative}
+#phCanvas{max-width:100%;max-height:72vh;width:auto;height:auto;display:block;border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.22);touch-action:none;cursor:grab}
+.ph-empty{position:absolute;inset:16px;display:grid;place-items:center;pointer-events:none}
+.ph-empty .pick{pointer-events:auto}
+.ph-ctrl{display:grid;gap:16px;min-width:0}
+.ph-f{display:grid;gap:8px}
+.ph-f > .lab{font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:inherit;font-weight:800;font-size:14px;border:2px solid var(--border);background:var(--surface);color:var(--fg);border-radius:999px;padding:6px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.ph-ctrl select,.ph-ctrl input[type=text]{font:inherit;font-size:16px;width:100%;padding:9px 12px;border:2px solid var(--border);border-radius:12px;background:var(--surface);color:var(--fg)}
+.ph-ctrl input[type=range]{width:100%;accent-color:var(--fg)}
+.ph-act{display:flex;gap:10px;flex-wrap:wrap}
+.ph-act .btn{flex:1 1 140px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+@media (max-width:900px){.ph-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ph-ed{grid-template-columns:1fr;padding-block:16px 32px}#phCanvas{max-height:55vh}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -281,6 +307,7 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
       <a class="logo" href="#games" aria-label="Rankova Studio"><b>RANKOVA</b><span>studio</span></a>
       <nav class="nav">
         <a class="lnk" href="#games">Ігри</a>
+        <a class="lnk" href="#photo">Фото</a>
         <a class="lnk" href="#board">Рейтинг</a>
         <a class="btn ink small" data-book="header" href="#" target="_blank" rel="noopener">Записатись на урок</a>
       </nav>
@@ -324,6 +351,20 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
     <div class="grid" id="grid"></div>
   </section>
 
+  <section id="photo">
+    <div class="sec-head">
+      <div>
+        <h2>Фото для Instagram</h2>
+        <p>Завантаж фото з уроку чи концерту, обери стиль і отримай готовий пост або сторіз з лого студії. Для Квартирника 6 грудня є окремий стиль.</p>
+      </div>
+    </div>
+    <div class="ph-grid" id="phGrid"></div>
+    <div class="ph-cta">
+      <label class="btn ink pick">Обрати фото<input type="file" id="phFile" accept="image/*"></label>
+      <span class="small-note">Фото не завантажується в інтернет: усе обробляється на твоєму телефоні.</span>
+    </div>
+  </section>
+
   <section id="board">
     <div class="sec-head">
       <div>
@@ -363,6 +404,37 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
     <h3 id="isTitle">Rankova Arcade на телефоні</h3>
     <div id="isBody"></div>
     <button class="btn ink" id="isOk" type="button">Зрозуміло</button>
+  </div>
+</div>
+
+<div class="play" id="phEd" hidden role="dialog" aria-modal="true" aria-labelledby="phTitle">
+  <div class="play-bar">
+    <div class="wrap">
+      <h2 id="phTitle">Фото для Instagram</h2>
+      <button class="xbtn" id="phClose" type="button" aria-label="Закрити редактор">×</button>
+    </div>
+  </div>
+  <div class="wrap ph-ed">
+    <div class="ph-view">
+      <canvas id="phCanvas" width="1080" height="1350" aria-label="Готове фото"></canvas>
+      <div class="ph-empty" id="phEmpty"><label class="btn book pick big-btn">Обрати фото<input type="file" id="phFile2" accept="image/*"></label></div>
+    </div>
+    <div class="ph-ctrl">
+      <div class="ph-f"><span class="lab">Формат</span><div class="seg" id="phFmt"></div></div>
+      <div class="ph-f"><span class="lab">Стиль</span><div class="seg" id="phPreset"></div></div>
+      <div class="ph-f"><label class="lab" for="phHead">Текст</label><select id="phHead"></select>
+        <input type="text" id="phOwn" maxlength="28" placeholder="Або свій текст" autocomplete="off"></div>
+      <div class="ph-f" id="phInstrF"><label class="lab" for="phInstr">Інструмент</label><select id="phInstr"></select></div>
+      <div class="ph-f"><span class="lab">Обробка</span><div class="seg" id="phTone"></div></div>
+      <div class="ph-f"><label class="lab" for="phZoom">Масштаб</label><input type="range" id="phZoom" min="1" max="2.5" step="0.01" value="1">
+        <span class="small-note">Фото можна посунути пальцем.</span></div>
+      <div class="ph-act">
+        <button class="btn book" id="phShare" type="button" disabled>Поділитися</button>
+        <button class="btn" id="phSave" type="button" disabled>Зберегти</button>
+      </div>
+      <label class="btn small pick" id="phChange" hidden>Інше фото<input type="file" id="phFile3" accept="image/*"></label>
+      <p class="small-note" id="phMsg" hidden></p>
+    </div>
   </div>
 </div>
 
@@ -918,6 +990,263 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;rende
 addEventListener('appinstalled',()=>{installEvt=null;installBtn.hidden=true;track('pwa_installed',{})});
 if(STANDALONE)track('pwa_open',{});
 if('serviceWorker' in navigator&&isSecureContext)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+
+/* ---------- photo presets (пост 4:5 і сторіз 9:16 для Instagram) ---------- */
+{
+const YEL="#FFDF18",INK="#231F20",WHITE="#FFFFFF";
+const FMT={post:{w:1080,h:1350,name:"Пост"},story:{w:1080,h:1920,name:"Сторіз"}};
+const KV_DATE="6 грудня";
+const PRESETS=[
+  {id:"studio",name:"Студія",desc:"Фото на весь кадр, лого і фраза",heads:["Музика для всіх.","Сьогодні звучало.","Ми зіграли.","Ще один урок.","Пальці пам’ятають."],tone:"natural"},
+  {id:"lesson",name:"Урок",desc:"Інструмент і дата, як підсумок заняття",heads:["Ми зіграли.","Перший урок.","Нова пісня.","Сьогодні звучало."],tone:"natural",instr:true},
+  {id:"film",name:"Плівка",desc:"Біла рамка, як друковане фото",heads:["Музика для всіх.","З репетиції.","Момент з уроку.","Тут звучить музика."],tone:"warm"},
+  {id:"kvartyrnyk",name:"Квартирник",desc:"Внутрішній концерт · "+KV_DATE,heads:["Квартирник","Грали свої","Вечір живої музики"],tone:"warm"}
+];
+const TONES=[["natural","Натурально"],["warm","Тепло"],["bw","Ч/Б"]];
+const st={fmt:"post",preset:"studio",head:0,own:"",instr:"Гітара",date:KV_DATE,tone:"natural",zoom:1,ox:0,oy:0};
+let IMG=null,imgId=0;
+/* ---------- drawing helpers ---------- */
+function sun(c,cx,cy,r,color,lw){
+  c.save();c.strokeStyle=color;c.lineWidth=lw;c.lineCap="round";
+  c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.stroke();
+  c.beginPath();c.moveTo(cx-r*1.35,cy);c.lineTo(cx+r*1.35,cy);c.stroke();
+  const ry=cy-r*1.5;
+  c.beginPath();c.moveTo(cx,ry-r*.55);c.lineTo(cx,ry);
+  c.moveTo(cx-r*1.15,ry+r*.05);c.lineTo(cx-r*.75,ry+r*.4);
+  c.moveTo(cx+r*1.15,ry+r*.05);c.lineTo(cx+r*.75,ry+r*.4);c.stroke();
+  c.restore();
+}
+/* RANKOVA wordmark with the sun as the O, STUDIO beneath (as in the studio's logo) */
+function wordmark(c,x,y,h,col,acc,align){
+  c.save();c.font=`500 ${h}px Jost, Futura, sans-serif`;c.textBaseline="alphabetic";
+  const sp=h*.16,parts=["R","A","N","K","O","V","A"];
+  const widths=parts.map(p=>p==="O"?h*.78:c.measureText(p).width);
+  const total=widths.reduce((a,b)=>a+b,0)+sp*(parts.length-1);
+  let px=align==="right"?x-total:x;
+  parts.forEach((p,i)=>{
+    if(p==="O"){const r=h*.33;sun(c,px+widths[i]/2,y-h*.36,r,acc,h*.085)}
+    else{c.fillStyle=col;c.fillText(p,px,y)}
+    px+=widths[i]+sp;
+  });
+  c.font=`500 ${h*.62}px Jost, Futura, sans-serif`;c.fillStyle=acc;
+  const s="STUDIO",ssp=h*.2;let sw=0;for(const ch of s)sw+=c.measureText(ch).width+ssp;sw-=ssp;
+  let sx=(align==="right"?x-total:x)+(total-sw)/2;
+  for(const ch of s){c.fillText(ch,sx,y+h*.86);sx+=c.measureText(ch).width+ssp}
+  c.restore();return total;
+}
+function spaced(c,t,x,y,ls,align){
+  let w=0;for(const ch of t)w+=c.measureText(ch).width+ls;w-=ls;
+  let px=align==="right"?x-w:align==="center"?x-w/2:x;
+  for(const ch of t){c.fillText(ch,px,y);px+=c.measureText(ch).width+ls}
+  return w;
+}
+function wrap(c,text,maxW){
+  const words=text.split(" "),lines=[];let cur="";
+  for(const w of words){const t=cur?cur+" "+w:w;if(c.measureText(t).width>maxW&&cur){lines.push(cur);cur=w}else cur=t}
+  if(cur)lines.push(cur);return lines;
+}
+/* headline in Comfortaa; a trailing full stop is drawn as a yellow dot (brand accent) */
+function headline(c,text,x,yBottom,size,maxW,col,dotCol){
+  c.save();c.font=`700 ${size}px Comfortaa, sans-serif`;c.fillStyle=col;c.textBaseline="alphabetic";
+  const dot=/\.$/.test(text),t=dot?text.slice(0,-1):text;
+  const lines=wrap(c,t,maxW),lh=size*1.08;
+  let y=yBottom-(lines.length-1)*lh;const top=y-size*.78;
+  lines.forEach((l,i)=>{c.fillText(l,x,y);if(dot&&i===lines.length-1){const w=c.measureText(l).width;c.fillStyle=dotCol;c.beginPath();c.arc(x+w+size*.14,y-size*.07,size*.085,0,Math.PI*2);c.fill();c.fillStyle=col}y+=lh});
+  c.restore();return top;
+}
+/* photo: cover-crop into a box, with zoom/offset and a tone; cached per size */
+const toneCache=new Map();
+function tonedSource(tone){
+  if(!IMG)return null;const key=tone+"|"+imgId;
+  if(toneCache.has(key))return toneCache.get(key);
+  const cv=document.createElement("canvas");cv.width=IMG.width;cv.height=IMG.height;
+  const x=cv.getContext("2d");x.drawImage(IMG,0,0);
+  if(tone!=="natural"){
+    const d=x.getImageData(0,0,cv.width,cv.height),p=d.data;
+    for(let i=0;i<p.length;i+=4){
+      let r=p[i],g=p[i+1],b=p[i+2];
+      if(tone==="bw"){let l=.3*r+.59*g+.11*b;l=(l-128)*1.12+128;r=g=b=l}
+      else{r=r*1.06+8;g=g*1.01+3;b=b*.9;const l=.3*r+.59*g+.11*b;r=l+(r-l)*1.08;g=l+(g-l)*1.08;b=l+(b-l)*1.08}
+      p[i]=r;p[i+1]=g;p[i+2]=b;
+    }
+    x.putImageData(d,0,0);
+  }
+  toneCache.set(key,cv);return cv;
+}
+function photo(c,bx,by,bw,bh,s){
+  const src=tonedSource(s.tone);
+  if(!src){placeholder(c,bx,by,bw,bh);return}
+  const sc=Math.max(bw/src.width,bh/src.height)*s.zoom,dw=src.width*sc,dh=src.height*sc;
+  const mx=(dw-bw)/2,my=(dh-bh)/2;
+  const dx=bx-mx+Math.max(-1,Math.min(1,s.ox))*mx,dy=by-my+Math.max(-1,Math.min(1,s.oy))*my;
+  c.save();c.beginPath();c.rect(bx,by,bw,bh);c.clip();c.drawImage(src,dx,dy,dw,dh);c.restore();
+}
+function shade(c,y0,y1,a0,a1,W){const g=c.createLinearGradient(0,y0,0,y1);g.addColorStop(0,`rgba(28,24,25,${a0})`);g.addColorStop(1,`rgba(28,24,25,${a1})`);c.fillStyle=g;c.fillRect(0,y0,W,y1-y0)}
+function rule(c,x0,x1,y,col,a){c.save();c.globalAlpha=a;c.fillStyle=col;c.fillRect(x0,y,x1-x0,2);c.restore()}
+function label(c,t,x,y,col,size,align){c.save();c.font=`800 ${size}px Nunito, sans-serif`;c.fillStyle=col;spaced(c,t.toUpperCase(),x,y,size*.22,align);c.restore()}
+function headText(s,p){return (s.own||"").trim()||p.heads[Math.min(s.head,p.heads.length-1)]}
+
+/* ---------- presets ---------- */
+const DRAW={
+  studio(c,W,H,s,p){
+    photo(c,0,0,W,H,s);
+    shade(c,0,H*.2,.55,0,W);shade(c,H*.48,H,0,.82,W);
+    const M=72,story=H>1500,T=story?200:M,B=story?230:72;
+    wordmark(c,M,T+52,46,WHITE,YEL);
+    c.font="800 24px Nunito, sans-serif";c.fillStyle="rgba(255,255,255,.85)";spaced(c,"#RANKOVASTUDIO",W-M,T+34,5,"right");
+    headline(c,headText(s,p),M,H-B-118,story?128:116,W-M*2,WHITE,YEL);
+    rule(c,M,W-M,H-B-46,WHITE,.35);
+    label(c,"Рівне · вул. П. Могили, 28",M,H-B,"rgba(255,255,255,.8)",22);
+    label(c,"@rankova.studio",W-M,H-B,"rgba(255,255,255,.8)",22,"right");
+  },
+  lesson(c,W,H,s,p){
+    photo(c,0,0,W,H,s);
+    shade(c,0,H*.22,.6,0,W);shade(c,H*.42,H,0,.9,W);
+    const M=72,story=H>1500,T=story?200:M;
+    wordmark(c,M,T+52,46,WHITE,YEL);
+    c.font="800 24px Nunito, sans-serif";c.fillStyle="rgba(255,255,255,.85)";spaced(c,"#RANKOVASTUDIO",W-M,T+34,5,"right");
+    const foot=H-(story?230:72),rowTop=foot-220;
+    headline(c,headText(s,p),M,rowTop-70,story?128:112,W-M*2,WHITE,YEL);
+    // data row, like a run summary: instrument | date | format
+    rule(c,M,W-M,rowTop,WHITE,.3);
+    const col=(W-M*2)/2,ly=rowTop+58,vy=rowTop+128;
+    c.fillStyle=YEL;c.fillRect(M,ly-12,28,4);
+    label(c,"Інструмент",M+40,ly,"rgba(255,255,255,.75)",21);
+    label(c,"Дата",M+col+24,ly,"rgba(255,255,255,.75)",21);
+    c.font="700 58px Comfortaa, sans-serif";c.fillStyle=WHITE;c.fillText(s.instr,M,vy);
+    const d=new Date(),dd=String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0");
+    c.fillText(dd,M+col+24,vy);
+    c.save();c.globalAlpha=.3;c.fillStyle=WHITE;c.fillRect(M+col,rowTop+30,2,120);c.restore();
+    rule(c,M,W-M,foot-46,WHITE,.3);
+    label(c,"Rankova Studio · Музика для всіх",M,foot,"rgba(255,255,255,.85)",21);
+    label(c,"Урок",W-M,foot,YEL,21,"right");
+  },
+  film(c,W,H,s,p){
+    c.fillStyle="#FBFAF7";c.fillRect(0,0,W,H);
+    const story=H>1500,M=story?84:64;
+    const pw=W-M*2,ph=story?Math.round(pw*1.25):H-M-250,py=story?350:M;
+    photo(c,M,py,pw,ph,s);
+    const ty=py+ph+(story?120:104);
+    c.save();c.font=`700 ${story?62:56}px Comfortaa, sans-serif`;c.fillStyle=INK;c.fillText(headText(s,p),M,ty);c.restore();
+    const d=new Date(),months=["січня","лютого","березня","квітня","травня","червня","липня","серпня","вересня","жовтня","листопада","грудня"];
+    c.font="600 26px Nunito, sans-serif";c.fillStyle="#7a746f";c.fillText(`Rankova Studio · ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`,M,ty+(story?58:52));
+    sun(c,W-M-32,ty-(story?14:12),18,"#E8C400",5);
+    if(story)wordmark(c,W/2-wordmarkW(c,44)/2,250,44,INK,"#E8C400");
+  },
+  kvartyrnyk(c,W,H,s,p){
+    photo(c,0,0,W,H,s);
+    // warm night: deep vignette + bottom shade
+    const g=c.createRadialGradient(W/2,H*.45,W*.25,W/2,H*.5,H*.75);g.addColorStop(0,"rgba(30,18,10,0)");g.addColorStop(1,"rgba(30,18,10,.6)");c.fillStyle=g;c.fillRect(0,0,W,H);
+    shade(c,H*.5,H,0,.85,W);shade(c,0,H*.25,.55,0,W);
+    const M=72,story=H>1500;
+    garland(c,W,story?300:200,story?150:0);
+    const foot=H-(story?230:72);
+    const t=headText(s,p);
+    let fs=story?150:136;c.save();c.font=`700 ${fs}px Comfortaa, sans-serif`;
+    while(fs>70&&wrap(c,t,W-M*2).some(l=>c.measureText(l).width>W-M*2)){fs-=4;c.font=`700 ${fs}px Comfortaa, sans-serif`}
+    c.fillStyle=WHITE;const lines=wrap(c,t,W-M*2),lh=fs*1.04;let y=foot-196-(lines.length-1)*lh;
+    lines.forEach(l=>{c.fillText(l,M,y);y+=lh});c.restore();
+    c.font="600 34px Nunito, sans-serif";c.fillStyle="rgba(255,255,255,.88)";
+    c.fillText("Внутрішній концерт · "+KV_DATE,M,foot-122);
+    rule(c,M,W-M,foot-82,WHITE,.3);
+    wordmark(c,M,foot-6,40,WHITE,YEL);
+    label(c,"@rankova.studio",W-M,foot-14,"rgba(255,255,255,.8)",22,"right");
+  }
+};
+function wordmarkW(c,h){c.save();c.font=`500 ${h}px Jost, Futura, sans-serif`;let w=0;for(const ch of "RANKVA")w+=c.measureText(ch).width;c.restore();return w+h*.78+h*.16*6}
+/* string of warm bulbs across the top: the living-room concert cue */
+function garland(c,W,sag,top){
+  const y0=-10+(top||0),pts=13;c.save();
+  c.strokeStyle="rgba(255,240,200,.35)";c.lineWidth=2;c.beginPath();
+  for(let i=0;i<=60;i++){const t=i/60,x=-20+t*(W+40),y=y0+Math.sin(Math.PI*t)*sag;i?c.lineTo(x,y):c.moveTo(x,y)}c.stroke();
+  for(let i=1;i<pts;i++){const t=i/pts,x=-20+t*(W+40),y=y0+Math.sin(Math.PI*t)*sag+16;
+    const gl=c.createRadialGradient(x,y,0,x,y,46);gl.addColorStop(0,"rgba(255,214,90,.55)");gl.addColorStop(1,"rgba(255,214,90,0)");
+    c.fillStyle=gl;c.beginPath();c.arc(x,y,46,0,Math.PI*2);c.fill();
+    c.fillStyle="#FFE58A";c.beginPath();c.arc(x,y,8,0,Math.PI*2);c.fill();}
+  c.restore();
+}
+function render(canvas,s){
+  const f=FMT[s.fmt];if(canvas.width!==f.w||canvas.height!==f.h){canvas.width=f.w;canvas.height=f.h}
+  const c=canvas.getContext("2d");c.clearRect(0,0,f.w,f.h);
+  const p=PRESETS.find(x=>x.id===s.preset);DRAW[p.id](c,f.w,f.h,s,p);
+}
+/* until a photo is chosen: a soft warm-graphite stand-in so the layout still reads */
+function placeholder(c,x,y,w,h){
+  const g=c.createLinearGradient(x,y,x+w*.4,y+h);g.addColorStop(0,"#5b4f45");g.addColorStop(1,"#231F20");
+  c.fillStyle=g;c.fillRect(x,y,w,h);
+  const r=c.createRadialGradient(x+w*.7,y+h*.32,0,x+w*.7,y+h*.32,w*.6);r.addColorStop(0,"rgba(255,223,24,.28)");r.addColorStop(1,"rgba(255,223,24,0)");
+  c.fillStyle=r;c.fillRect(x,y,w,h);
+}
+
+const ed=$('#phEd'),cv=$('#phCanvas');
+function seg(el,items,key,after){
+  el.innerHTML=items.map(([v,n])=>`<button type="button" data-v="${v}" aria-pressed="${st[key]===v}">${n}</button>`).join("");
+  el.onclick=e=>{const b=e.target.closest("button");if(!b)return;st[key]=b.dataset.v;el.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));if(after)after();draw()};
+}
+function syncPreset(){
+  const p=PRESETS.find(x=>x.id===st.preset);
+  $('#phHead').innerHTML=p.heads.map((h,i)=>`<option value="${i}">${esc(h)}</option>`).join("");st.head=0;st.own="";$('#phOwn').value="";
+  $('#phInstrF').hidden=!p.instr;st.tone=p.tone;seg($('#phTone'),TONES,"tone");
+}
+function draw(){render(cv,st)}
+function drawGrid(){document.querySelectorAll('#phGrid canvas').forEach(c=>{const p=PRESETS.find(x=>x.id===c.dataset.p);render(c,{fmt:"post",preset:p.id,head:0,own:"",instr:st.instr,date:KV_DATE,tone:p.tone,zoom:1,ox:0,oy:0})})}
+function setHasPhoto(){const has=!!IMG;$('#phEmpty').hidden=has;$('#phShare').disabled=!has;$('#phSave').disabled=!has;$('#phChange').hidden=!has}
+function openEd(preset){
+  if(preset){st.preset=preset;seg($('#phPreset'),PRESETS.map(x=>[x.id,x.name]),"preset",syncPreset);syncPreset()}
+  ed.hidden=false;document.body.classList.add('lock');setHasPhoto();draw();track('photo_open',{preset:st.preset});
+}
+function closeEd(){ed.hidden=true;document.body.classList.remove('lock')}
+function msg(t){const m=$('#phMsg');m.textContent=t||'';m.hidden=!t}
+/* phone photos are huge: scale down once, so tones and redraws stay fast */
+function loadFile(f){
+  if(!f)return;msg('');
+  const url=URL.createObjectURL(f),im=new Image();
+  im.onload=()=>{
+    const k=Math.min(1,2400/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');
+    c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+    URL.revokeObjectURL(url);IMG=c;imgId++;toneCache.clear();st.zoom=1;$('#phZoom').value=1;st.ox=st.oy=0;
+    if(ed.hidden)openEd();else{setHasPhoto();draw()}
+    drawGrid();track('photo_upload',{});
+  };
+  im.onerror=()=>{URL.revokeObjectURL(url);msg('Не вдалося відкрити це фото. Спробуй інше (JPG або PNG).')};
+  im.src=url;
+}
+['#phFile','#phFile2','#phFile3'].forEach(q=>$(q).addEventListener('change',e=>{loadFile(e.target.files[0]);e.target.value=''}));
+function blob(){return new Promise(r=>cv.toBlob(r,'image/jpeg',.92))}
+const fname=()=>`rankova-${st.preset}-${st.fmt}.jpg`;
+async function saveFile(){
+  const b=await blob(),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fname();document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);
+  msg(IOS?'Якщо фото відкрилось у новій вкладці, натисни «Поділитися» → «Зберегти зображення».':'Фото збережено.');
+  track('photo_save',{preset:st.preset,format:st.fmt});
+}
+$('#phSave').addEventListener('click',saveFile);
+$('#phShare').addEventListener('click',async()=>{
+  const b=await blob(),file=new File([b],fname(),{type:'image/jpeg'});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file]});track('photo_share',{preset:st.preset,format:st.fmt})}
+    catch(e){if(e&&e.name!=='AbortError')saveFile()}
+  }else saveFile();
+});
+$('#phHead').onchange=e=>{st.head=+e.target.value;st.own="";$('#phOwn').value="";draw()};
+$('#phOwn').oninput=e=>{st.own=e.target.value;draw()};
+$('#phInstr').innerHTML=INSTR.map(i=>`<option${i.inst===st.instr?' selected':''}>${i.inst}</option>`).join("");
+$('#phInstr').onchange=e=>{st.instr=e.target.value;draw()};
+$('#phZoom').oninput=e=>{st.zoom=+e.target.value;draw()};
+$('#phClose').addEventListener('click',closeEd);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ed.hidden)closeEd()});
+let drag=null;
+cv.addEventListener('pointerdown',e=>{if(!IMG)return;drag={x:e.clientX,y:e.clientY,ox:st.ox,oy:st.oy};cv.setPointerCapture(e.pointerId)});
+cv.addEventListener('pointermove',e=>{if(!drag)return;const r=cv.getBoundingClientRect();st.ox=Math.max(-1,Math.min(1,drag.ox-(e.clientX-drag.x)/r.width*2.2));st.oy=Math.max(-1,Math.min(1,drag.oy-(e.clientY-drag.y)/r.height*2.2));draw()});
+['pointerup','pointercancel'].forEach(t=>cv.addEventListener(t,()=>drag=null));
+seg($('#phFmt'),Object.entries(FMT).map(([k,v])=>[k,v.name]),"fmt");
+seg($('#phPreset'),PRESETS.map(x=>[x.id,x.name]),"preset",syncPreset);syncPreset();
+$('#phGrid').innerHTML=PRESETS.map(p=>`<button class="ph-card" type="button" data-p="${p.id}"><canvas data-p="${p.id}" width="1080" height="1350" aria-hidden="true"></canvas><b>${p.name}</b><small>${p.desc}</small></button>`).join("");
+$('#phGrid').addEventListener('click',e=>{const b=e.target.closest('.ph-card');if(b)openEd(b.dataset.p)});
+drawGrid();
+// canvas text needs the web fonts loaded first
+if(document.fonts&&document.fonts.load)Promise.all(['700 40px Comfortaa','500 40px Jost','800 20px Nunito','600 20px Nunito'].map(f=>document.fonts.load(f))).catch(()=>{}).then(()=>{drawGrid();if(!ed.hidden)draw()});
+}
 
 /* ---------- deep links: #play-<гра> (ярлики на іконці застосунку) ---------- */
 function fromHash(){const m=/^#play-(\w+)$/.exec(location.hash);if(m&&INSTR.some(i=>i.id===m[1])){history.replaceState(null,'',location.pathname+location.search);openGame(m[1])}}

@@ -20,7 +20,7 @@
   "shortcuts": [
     { "name": "Грув-машина", "short_name": "Барабани", "url": "./?utm_source=homescreen#play-drums", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
     { "name": "Чистий слух", "short_name": "Вокал", "url": "./?utm_source=homescreen#play-vocal", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
-    { "name": "Акорд-квест", "short_name": "Гітара", "url": "./?utm_source=homescreen#play-guitar", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
+    { "name": "Фото для Instagram", "short_name": "Фото", "url": "./?utm_source=homescreen#photo", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
     { "name": "Рейтинг", "short_name": "Рейтинг", "url": "./?utm_source=homescreen#board", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] }
   ]
 }
