@@ -88,13 +88,16 @@ kbd{font-family:var(--f-body);font-size:11px;font-weight:800;border:1.5px solid 
 .nav{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 .nav a.lnk{font-weight:800;text-decoration:none;border-bottom:2px solid transparent}
 .nav a.lnk:hover{border-color:var(--on-brand)}
-.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:32px;padding-block:28px 44px;align-items:center}
+.hero{display:grid;padding-block:36px 52px}
+.hero .big-btn{margin-top:26px;min-width:220px}
+.lnk-install{display:block;margin-top:14px;background:none;border:0;padding:0;font:inherit;font-weight:800;color:var(--on-brand);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.side{display:grid;gap:24px;min-width:0}
 .hero > *{min-width:0}
 .eyebrow{font-size:13px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
-.hero h1{font-size:clamp(34px,6vw,62px);margin-top:10px;letter-spacing:-.01em}
+.hero h1{font-size:clamp(40px,8vw,76px);margin-top:10px;letter-spacing:-.01em}
 .hero p.lead{font-size:18px;max-width:34em;margin:16px 0 22px}
 .hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
-.player{background:var(--surface);color:var(--fg);border:2px solid var(--on-brand);border-radius:var(--r);box-shadow:6px 6px 0 var(--on-brand);padding:22px;display:grid;gap:14px}
+.player{background:var(--surface);color:var(--fg);border:2px solid var(--border);border-radius:var(--r);box-shadow:5px 5px 0 var(--shadow);padding:18px;display:grid;gap:12px}
 .player label{font-size:13px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .nickrow{display:flex;gap:8px}
 .player{grid-template-columns:minmax(0,1fr)}
@@ -247,7 +250,10 @@ footer{padding-block:0 32px;color:var(--muted);font-size:14px;text-align:center}
 .tipcard{text-align:left;background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:4px 4px 0 var(--shadow)}
 .tipcard b{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
 .tipcard p{margin:0}
-.res-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.res-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.result .big-btn{width:100%}
+.rnick{display:grid;gap:8px;text-align:left;background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:14px 16px}
+.rnick label{font-weight:900}
 .lesson{background:var(--fg);color:var(--bg);border-radius:var(--r);padding:20px;display:grid;gap:12px;text-align:left}
 .lesson h3{font-size:22px}
 .lesson p{margin:0;opacity:.85}
@@ -262,7 +268,7 @@ footer{padding-block:0 32px;color:var(--muted);font-size:14px;text-align:center}
 .opt svg{width:100%;max-width:120px;height:auto}
 button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 @media (max-width:520px){.opts.text{--cols:1}.opt{min-height:54px;padding:10px 12px}.q{font-size:20px}.play-bar h2{font-size:15px}.play-bar .wrap{gap:8px}.chip{padding:2px 8px;font-size:12px}.stage{padding-block:18px 32px;gap:14px}.intro{padding:20px}}
-@media (max-width:860px){.hero{grid-template-columns:1fr}.board{grid-template-columns:1fr}.final{grid-template-columns:1fr;padding:26px}}
+@media (max-width:860px){.board{grid-template-columns:1fr}.final{grid-template-columns:1fr;padding:26px}}
 @media (max-width:520px){.nav a.lnk{display:none}.piano{height:190px}.piano .pad b{font-size:14px}.score-big{font-size:64px}.sop{padding-left:96px;height:80px}.sop::before{width:44px;left:16px;top:18px}.sop::after{left:70px;top:30px}.hole i{width:26px;height:26px}.drum-wrap canvas{height:300px}}
 .sheet{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;background:rgba(35,31,32,.55);padding:16px;padding-bottom:max(16px,env(safe-area-inset-bottom,0px))}
 .sheet .panel{width:100%;max-width:440px;position:relative}
@@ -315,25 +321,10 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
     <div class="hero">
       <div>
         <div class="eyebrow">Rankova Arcade · 7 інструментів</div>
-        <h1>Музика для всіх. Навіть для тих, хто поки тільки клацає.</h1>
-        <p class="lead">Сім міні-ігор на слух, ритм і пальці: вокал, фортепіано, барабани, гітара, кахон, сопілка й етноспів. Збирай бали, піднімайся в рейтингу, а потім приходь заграти наживо.</p>
-        <div class="ctas">
-          <a class="btn ink" href="#games">Почати грати</a>
-          <a class="btn" data-book="hero" href="#" target="_blank" rel="noopener">Пробний урок 30 хв</a>
-          <button class="btn" id="installBtn" type="button" hidden>Встановити на телефон</button>
-        </div>
+        <h1>Музика для всіх.</h1>
+        <a class="btn ink big-btn" href="#games">Грати</a>
+        <button class="lnk-install" id="installBtn" type="button" hidden>Встановити на телефон</button>
       </div>
-      <aside class="player" aria-label="Твій профіль">
-        <label for="nick">Твій сценічний нік</label>
-        <div class="nickrow">
-          <input id="nick" maxlength="20" placeholder="Напр. Яна_Bass" autocomplete="off">
-          <button class="btn small ink" id="nickSave" type="button">Зберегти</button>
-        </div>
-        <div class="lvl"><strong id="lvlName">Новачок</strong><span id="lvlPts">0 балів</span></div>
-        <div class="xp" aria-hidden="true"><i id="xpBar"></i></div>
-        <p class="small-note" id="lvlNext">До рівня «Аматор» — 1000 балів</p>
-        <div class="badges" id="badges" aria-label="Пройдені інструменти"></div>
-      </aside>
     </div>
   </div>
 </div>
@@ -378,9 +369,22 @@ button,a,.pad,.hole{touch-action:manipulation;-webkit-tap-highlight-color:transp
         <ol class="rows" id="rows"></ol>
         <p class="small-note" id="boardNote" hidden></p>
       </div>
+      <div class="side">
+      <aside class="player" aria-label="Твій профіль">
+        <label for="nick">Твій сценічний нік</label>
+        <div class="nickrow">
+          <input id="nick" maxlength="20" placeholder="Напр. Яна_Bass" autocomplete="off">
+          <button class="btn small ink" id="nickSave" type="button">Зберегти</button>
+        </div>
+        <div class="lvl"><strong id="lvlName">Новачок</strong><span id="lvlPts">0 балів</span></div>
+        <div class="xp" aria-hidden="true"><i id="xpBar"></i></div>
+        <p class="small-note" id="lvlNext">До рівня «Аматор» — 1000 балів</p>
+        <div class="badges" id="badges" aria-label="Пройдені інструменти"></div>
+      </aside>
       <div class="panel">
         <h3 style="font-size:20px;margin-bottom:10px">Рівні</h3>
         <ul class="levels" id="levels"></ul>
+      </div>
       </div>
     </div>
   </section>
@@ -692,6 +696,7 @@ function closeGame(){if(current){current.stop();current=null}play.hidden=true;do
 $('#pClose').addEventListener('click',closeGame);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!play.hidden)closeGame()});
 
+const LESSON_OF={vocal:'вокалу',piano:'фортепіано',drums:'барабанів',guitar:'гітари',cajon:'кахону',sopilka:'сопілки',ethno:'етноспіву'};
 function showResult(ins,score){
   const prev=+store.best[ins.id]||0,isBest=score>prev;
   const beforeLvl=level(total());
@@ -705,15 +710,17 @@ function showResult(ins,score){
     ${lvUp?`<span class="ribbon">Новий рівень: ${LEVELS[level(total())][1]}</span>`:''}
     <div class="score-big">${score}</div>
     <p style="margin:0;color:var(--muted)">${isBest?(prev?'Попередній рекорд: '+prev:'Твій перший результат у цій грі'):'Твій рекорд: '+prev}. Загалом: ${total()}.</p>
-    <div class="tipcard"><b>Порада від викладача</b><p>${pick(ins.tips)}</p></div>
+    ${store.nick?'':`<div class="rnick"><label for="rNick">Як підписати тебе в рейтингу?</label><div class="nickrow"><input id="rNick" maxlength="20" placeholder="Напр. Яна_Bass" autocomplete="off"><button class="btn small ink" id="rNickSave" type="button">Зберегти</button></div></div>`}
+    <a class="btn book big-btn" href="${bookUrl(ins.id)}" target="_blank" rel="noopener">Пробний урок ${LESSON_OF[ins.id]||''}</a>
     <div class="res-actions">
-      <button class="btn ink" type="button" id="again">Грати ще</button>
-      <button class="btn" type="button" id="toHub">Інші ігри</button>
-      <button class="btn" type="button" id="share">Кинути виклик другу</button>
+      <button class="btn small" type="button" id="again">Грати ще</button>
+      <button class="btn small" type="button" id="toHub">Інші ігри</button>
+      <button class="btn small" type="button" id="share">Кинути виклик</button>
     </div>
-    <div class="lesson"><h3>${ins.inst}: спробуй наживо</h3><p>Гра — це розминка. На пробному уроці викладач покаже, як це звучить у твоїх руках.</p>
-      <a class="btn book" href="${bookUrl(ins.id)}" target="_blank" rel="noopener">Записатись на урок</a></div>
+    <div class="tipcard"><b>Порада від викладача</b><p>${pick(ins.tips)}</p></div>
   </div>`;
+  if(!store.nick){const saveR=()=>{const v=$('#rNick').value.trim().slice(0,20);if(!v)return;store.nick=v;$('#nick').value=v;save();syncRemote();renderRows();$('.rnick').innerHTML=`<p class="small-note">Ти в рейтингу як <b>${esc(v)}</b></p>`};
+    $('#rNickSave').addEventListener('click',saveR);$('#rNick').addEventListener('keydown',e=>{if(e.key==='Enter')saveR()})}
   if(isBest&&score>0)chime();
   $('#again').addEventListener('click',()=>openGame(ins.id));
   $('#toHub').addEventListener('click',()=>{closeGame();$('#games').scrollIntoView({behavior:'smooth'})});
